@@ -49,7 +49,8 @@ T CList<T>::getLast() {
 		exception->printMsg();
     }
 #endif // DEBUG
-	return elementData[_size - 1];
+	T tmp = elementData[_size - 1];
+	return tmp;
 }
 
 template <class T>
@@ -60,8 +61,8 @@ T CList<T>::get(int index) {
 		exception->printMsg();
     }
 #endif // DEBUG
-
-	return elementData[index];
+	T tmp = elementData[index];
+	return tmp;
 }
 
 template <class T>
@@ -138,14 +139,17 @@ T CList<T>::removeLast() {
 		exception->printMsg();
 }
 #endif // DEBUG
-	return elementData[--_size];
+	T tmp = elementData[--_size];
+	return tmp;
 }
 
 template <class T>
 bool CList<T>::remove(T t) {
 	for(int i = 0; i < _size; i++) {
 		if(t == elementData[i]) {
-			remove(i);
+			for (int j = i; j < _size - 1; j++) {
+				elementData[j] = elementData[j + 1];
+			}
 			return true;
 		}
 	}
@@ -156,7 +160,9 @@ template <class T>
 bool CList<T>::remove(T t, bool equals(T l, T r)) {
 	for (int i = 0; i < _size; i++) {
 		if (equals(elementData[i], t)) {
-			remove(i);
+			for (int j = i; j < _size - 1; j++) {
+				elementData[j] = elementData[j + 1];
+			}
 			return true;
 		}
 	}
@@ -166,6 +172,7 @@ bool CList<T>::remove(T t, bool equals(T l, T r)) {
 template <class T>
 bool CList<T>::clear() {
 	_size = 0;
+	return true;
 }
 
 template <class T>

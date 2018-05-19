@@ -5,7 +5,7 @@
 GobangCBoard::GobangCBoard(){
 	width = 8;
 	height = 8;
-	n_in_row = 5;
+	n_in_row = 4;
 	player = 2;
 	_board = (int **) malloc(sizeof(int *) * width);
 	for (int i = 0; i < width; i++) {

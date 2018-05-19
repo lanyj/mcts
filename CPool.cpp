@@ -17,7 +17,7 @@ CPool<T>::CPool(int initSize, T newInstance())
 template <class T>
 T CPool<T>::obtain() {
 	if (_pool->isEmpty()) {
-		for (int i = initSize - 1; i >= 0; i--) {
+		for (int i = poolSize - 1; i >= 0; i--) {
 			_pool->add(this->newInstance());
 		}
 	}
@@ -30,7 +30,7 @@ template <class T>
 void CPool<T>::free(T* t) {
 //	bool p = _using->remove(t);
 //	if (p) {
-	_pool->add(p);
+	_pool->add(t);
 //	}
 }
 

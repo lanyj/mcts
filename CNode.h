@@ -1,5 +1,7 @@
 #pragma once
 
+#include <shared_mutex>
+
 #include "stdafx.h"
 #include "CList.h"
 #include "CBoard.h"
@@ -19,7 +21,6 @@ private:
 public:
 	CNode * parent;
 	CList<CNode*>* children;
-//	CList<CMove*>* unvisited;
 	double score;
 	double visits;
 	CMove* move;
@@ -32,6 +33,10 @@ public:
 	CNode* addNode(CMove* m, CBoard* board);
 
 	void update(double result);
+
+	void lock();
+
+	void unlock();
 
 	double value();
 
