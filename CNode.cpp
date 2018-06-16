@@ -1,7 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "stdafx.h"
 #include "CNode.h"
+
+#define EPISLION 1E-6
 
 void* CNode::getCNode(const void *list, int index) {
 	return ((CList<CNode*>*) list)->get(index);
@@ -34,28 +36,16 @@ CNode::CNode(CMove* move, CNode* parent, CBoard* board) {
 		
 CNode* CNode::uctSelectChild() {
 	//smt.lock();
-	double best = -1e8, tmp = 0;
-	int index = -1;
+	int index = rand() % children->size();
+	double best = children->get(index)->value(), tmp = 0;
 	for (int i = children->size() - 1; i >= 0; i--) {
 		CNode* c = children->get(i);
-		tmp = c->score / (0.000001 + c->visits) + sqrt(2 * log(0.000001 + c->parent->visits) / (0.000001 + c->visits));
-		//tmp = c->value();
+		tmp = c->value();
 		if (tmp > best) {
 			best = tmp;
 			index = i;
 		}
 	}
-	if (index == -1) {
-		index = rand() % children->size();
-	} else if (best == 0) {
-		do {
-			index = rand() % children->size();
-			CNode* c = children->get(index);
-			tmp = c->score / (0.000001 + c->visits) + sqrt(2 * log(0.000001 + c->parent->visits) / (0.000001 + c->visits));
-			//tmp = c->value();
-		} while (tmp != sqrt(2 * log(0.000001) / (0.000001)));
-	}
-//	CUtils::QuickSort(children, getCNode, children->size(), exchangeCNode, compareToCNode);
 	CNode* t = children->get(index);
 	//smt.unlock();
 	return t;
@@ -80,7 +70,7 @@ void CNode::update(double result) {
 double CNode::value() {
 //	printf("[%f, %f, %f] = %f\n", score, visits, parent->visits, score / (0.000001 + visits) + sqrt(2 * log(parent->visits) / (0.000001 + visits)));
 	//smt.lock();
-	double ret = score / (0.000001 + visits) + sqrt(2 * log(0.000001 + parent->visits) / (0.000001 + visits));
+	double ret = score / (EPISLION + visits) + sqrt(2 * log(EPISLION + parent->visits) / log(2.71828) / (EPISLION + visits));
 	//smt.unlock();
 	return ret;
 }

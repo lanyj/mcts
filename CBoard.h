@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CList.h"
 #include "CMove.h"

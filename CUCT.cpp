@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <time.h>
 #include "stdafx.h"
@@ -8,7 +8,7 @@
 #include "GobangCBoard.h"
 
 #define THREAD_CHECK_TIME 500
-#define THREAD_COUNT 4
+#define THREAD_COUNT 8
 static shared_mutex __cuct_smt;
 
 void* CUCT::getCNode(const void *list, int index) {
@@ -75,7 +75,7 @@ void CUCT::threadUCTMoveMethod(CNode* root, CBoard* _board, int itermax, int ind
 		delete board;
 	}
 	arr[index] = true;
-	printf("uct move thread %d returned.\n", index);
+	// printf("uct move thread %d returned.\n", index);
 }
 
 CMove* CUCT::uctMove(CBoard* _board, int itermax) {
@@ -105,9 +105,9 @@ CHECKA:
 			mostVist = tmp->visits;
 			index = i;
 		}
-		printf("Node on ");
-		tmp->move->toString();
-		printf(" visits = %f, socre = %f, value = %f\n", tmp->visits, tmp->score, tmp->value());
+//		printf("Node on ");
+//		tmp->move->toString();
+//		printf(" visits = %f, socre = %f, pvisits = %f, value = %f\n", tmp->visits, tmp->score, tmp->parent->visits, tmp->value());
 	}
 	move = root->children->get(index)->move->clone();
 	clearUp(root);
@@ -136,10 +136,12 @@ CNode* CUCT::expansion(CNode* root, CBoard* board) {
 #if THREAD_COUNT > 1
 	__cuct_smt.lock();
 
-	// ¼ì²éÊÇ²»ÊÇÈÔÈ»Î´±»¸ü¸Ä
+	// æ£€æŸ¥æ˜¯ä¸æ˜¯ä»ç„¶æœªè¢«æ›´æ”¹
 	if (!root->children->isEmpty()) {
 		__cuct_smt.unlock();
-		return randomChoiceCNode(root->children);
+		CNode* node = randomChoiceCNode(root->children);
+		board->applyMove(node->move);
+		return node;
 	}
 #endif // THREAD_COUNT > 1
 	
@@ -155,18 +157,53 @@ CNode* CUCT::expansion(CNode* root, CBoard* board) {
 
 	CNode* tmp = randomChoiceCNode(root->children);
 
+	board->applyMove(tmp->move);
+
 	delete moves;
 	return tmp;
 }
 
 double CUCT::simulation(CNode* root, CBoard* board) {
-	while (!board->isGameOver()) {
-		CMove* m = board->randomMove();
-		board->applyMove(m);
+	CBoard* tb = board;
+	while (!tb->isGameOver()) {
+		CMove* m = tb->randomMove();
+		tb->applyMove(m);
 		delete m;
 	}
-	double res = board->getResult(root->player);
-	return res;
+	return tb->getResult(root->player);
+/*	
+	@Deprecated
+
+	double w = 0, l = 0, e = 0;
+	int times = 100;
+	int htimes = times / 1.5;
+	while (times--) {
+		CBoard* tb = board->clone();
+		while (!tb->isGameOver()) {
+			CMove* m = tb->randomMove();
+			tb->applyMove(m);
+			delete m;
+		}
+		double tmp = tb->getResult(root->player) > 0;
+		if (tmp > 0) {
+			w++;
+		}
+		else if (tmp < 0) {
+			l++;
+		}
+		else {
+			e++;
+		}
+		delete tb;
+	}
+	if (w >= l && w >= e) {
+		return 1;
+	}
+	if (l >= w && l >= e) {
+		return -1;
+	}
+	return 0;
+	*/
 }
 
 void CUCT::backTrace(CNode* node, double res) {
@@ -190,7 +227,7 @@ void CUCT::threadClearUp(CNode* node, int begin, int end, int index, bool* arr) 
 		auxClearUp(children->get(i));
 	}
 	arr[index] = true;
-	printf("clear up thread %d returned.(%d, %d)\n", index, begin, end);
+	// printf("clear up thread %d returned.(%d, %d)\n", index, begin, end);
 }
 
 void CUCT::clearUp(CNode* root) {
@@ -198,7 +235,7 @@ void CUCT::clearUp(CNode* root) {
 	int total = root->children->size();
 	int e = total / THREAD_COUNT + (total % THREAD_COUNT == 0 ? 0 : 1);
 	for (int i = 0; i < THREAD_COUNT; i++) {
-		printf("(%d, %d) - (%d, %d)\n", total, e, i * e, MIN(i * e + e, total));
+		// printf("(%d, %d) - (%d, %d)\n", total, e, i * e, MIN(i * e + e, total));
 		std::thread t = std::thread(&CUCT::threadClearUp, root, i * e, MIN(i * e + e, total), i, arr);
 		t.detach();
 	}
@@ -228,7 +265,7 @@ void CUCT::uctPlayGame() {
 			move = uctMove(board, 100000);
 		}
 		else {
-			move = uctMove(board, 200000);
+			move = uctMove(board, 100000);
 		}
 		printf("\nPlayer %c STEP: ", c[board->getCurrentPlayer()]);
 		move->toString();
