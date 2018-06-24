@@ -118,10 +118,10 @@ CNode* CUCT::select(CNode* root, CBoard* board) {
 	if (root->children->isEmpty()) {
 		return root;
 	}
-	CNode* next = root->uctSelectChild();
+	CNode* next = root->uctSelectChild(board);
 	board->applyMove(next->move);
 	while (!next->children->isEmpty()) {
-		next = next->uctSelectChild();
+		next = next->uctSelectChild(board);
 		board->applyMove(next->move);
 	}
 	return next;
@@ -262,10 +262,10 @@ void CUCT::uctPlayGame() {
 	CMove *move;
 	while (!board->isGameOver()) {
 		if (board->getCurrentPlayer() == 1) {
-			move = uctMove(board, 100000);
+			move = uctMove(board, 50000);
 		}
 		else {
-			move = uctMove(board, 100000);
+			move = uctMove(board, 50000);
 		}
 		printf("\nPlayer %c STEP: ", c[board->getCurrentPlayer()]);
 		move->toString();

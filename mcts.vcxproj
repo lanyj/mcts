@@ -113,6 +113,7 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalOptions />
     </ClCompile>
     <Link>
       <AdditionalOptions>/utf-8 -ID:\Python\Python36\include D:\Python\Python36\libs\python36.lib %(AdditionalOptions)</AdditionalOptions>
@@ -120,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CBoard.cpp" />
+    <ClCompile Include="CBoardPolicyValue.cpp" />
     <ClCompile Include="CException.cpp" />
     <ClCompile Include="CList.cpp" />
     <ClCompile Include="CMove.cpp" />
@@ -141,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBoard.h" />
+    <ClInclude Include="CBoardPolicyValue.h" />
     <ClInclude Include="CException.h" />
     <ClInclude Include="CList.h" />
     <ClInclude Include="CMove.h" />

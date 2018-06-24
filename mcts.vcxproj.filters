@@ -72,6 +72,9 @@
     <ClCompile Include="CNumpyArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CBoardPolicyValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBoard.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CNumpyArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoardPolicyValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

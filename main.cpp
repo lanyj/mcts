@@ -7,7 +7,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-	srand(0);
+	srand(time(NULL));
 	CUCT::uctPlayGame();
 	int tmp = 0;
 	while (tmp != -1) {

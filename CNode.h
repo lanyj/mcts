@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <shared_mutex>
 
@@ -8,7 +8,6 @@
 #include "CMove.h"
 #include "CException.h"
 #include "CUtils.h"
-
 #include "CList.cpp"
 
 
@@ -21,6 +20,7 @@ private:
 public:
 	CNode * parent;
 	CList<CNode*>* children;
+	CList<double>* policy;
 	double score;
 	double visits;
 	CMove* move;
@@ -28,7 +28,7 @@ public:
 
 	CNode(CMove* move, CNode* parent, CBoard* board);
 
-	CNode* uctSelectChild();
+	CNode* uctSelectChild(CBoard* board);
 
 	CNode* addNode(CMove* m, CBoard* board);
 
